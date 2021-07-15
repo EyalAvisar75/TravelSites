@@ -11,7 +11,24 @@ import UIKit
 class ViewController: UIViewController {
     
     var cityLabel = UILabel()
-    var chosenSitesLabel = UILabel() //add observers
+    var chosenSitesLabel: UILabel = UILabel()
+    
+    var chosenText: String = "" {
+        willSet {
+            var counter = 0
+            for site in model {
+                if site.isCheck {
+                    counter += 1
+                }
+            }
+            if counter == 0 {
+                chosenSitesLabel.text = ""
+            }
+            else {
+                chosenSitesLabel.text = "\(counter)" + "\\"  + "\(model.count)"
+            }
+        }
+    }
     
     var model = SiteModel().getSiteModel()
     var myCollectionView:UICollectionView?
@@ -63,7 +80,7 @@ class ViewController: UIViewController {
         
         chosenSitesLabel = UILabel(frame: frame)
         chosenSitesLabel.textColor = .white
-        chosenSitesLabel.text = "0/0"
+//        chosenSitesLabel.text = "0/0"
         chosenSitesLabel.textAlignment = .right
         blueView.addSubview(chosenSitesLabel)
         
@@ -103,19 +120,20 @@ extension ViewController: UICollectionViewDelegate {
         else {
             myCollectionView?.reloadData()
             myCell.toggleCurtain(isChecked: model[indexPath.row].isCheck)
-//            checkCell(cell: cell)
             model[indexPath.row].isCheck = true
         }
+        
+        chosenText = "Text"
     }
     
-    func checkCell(cell: UICollectionViewCell) {
-        maskView.removeFromSuperview()
-        maskView.frame = cell.contentView.frame
-        cell.addSubview(maskView)
-        let checkmarkImageView = UIImageView(frame: CGRect(x: maskView.bounds.width - 20, y: 0, width: 20, height: 20))
-        checkmarkImageView.image = UIImage(systemName: "checkmark")
-        maskView.addSubview(checkmarkImageView)
-    }
+//    func checkCell(cell: UICollectionViewCell) {
+//        maskView.removeFromSuperview()
+//        maskView.frame = cell.contentView.frame
+//        cell.addSubview(maskView)
+//        let checkmarkImageView = UIImageView(frame: CGRect(x: maskView.bounds.width - 20, y: 0, width: 20, height: 20))
+//        checkmarkImageView.image = UIImage(systemName: "checkmark")
+//        maskView.addSubview(checkmarkImageView)
+//    }
 }
 
 extension ViewController: UICollectionViewDataSource {
