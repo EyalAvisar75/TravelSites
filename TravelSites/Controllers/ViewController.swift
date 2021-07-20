@@ -10,6 +10,9 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    private var doubleTapGesture: UITapGestureRecognizer!
+    private var longTapGesture: UILongPressGestureRecognizer!
+
     var cityLabel = UILabel()
     var chosenSitesLabel: UILabel = UILabel()
     
@@ -44,6 +47,7 @@ class ViewController: UIViewController {
         setNavBarAppearance()
         addBackgroundViews()
         addCollectionView()
+        setUpLongTap()
         
         myCollectionView?.dataSource = self
         myCollectionView?.delegate = self
@@ -80,7 +84,7 @@ class ViewController: UIViewController {
         
         chosenSitesLabel = UILabel(frame: frame)
         chosenSitesLabel.textColor = .white
-//        chosenSitesLabel.text = "0/0"
+
         chosenSitesLabel.textAlignment = .right
         blueView.addSubview(chosenSitesLabel)
         
@@ -104,36 +108,57 @@ class ViewController: UIViewController {
         myCollectionView?.backgroundColor = .none
         view.addSubview(myCollectionView ?? UICollectionView())
     }
+    
+    func setUpLongTap() {
+//        doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(didDoubleTapCollectionView))
+        
+        longTapGesture = UILongPressGestureRecognizer(target: self, action: #selector(didLongTapCollectionView))
+        myCollectionView?.addGestureRecognizer(longTapGesture)
+        
+        if longTapGesture.state != .ended {
+            return
+        }
+    }
+    
+    @objc func didLongTapCollectionView() {
+        if longTapGesture.state == UIGestureRecognizer.State.began {
+            
+        let pointInCollectionView = longTapGesture.location(in: myCollectionView)
+        
+        let myCell: SiteCell
+        
+        if let indexPath = myCollectionView?.indexPathForItem(at: pointInCollectionView) {
+            myCell = myCollectionView?.cellForItem(at: indexPath) as! SiteCell
+            
+            if model[indexPath.row].isCheck {
+                myCell.toggleCurtain(isChecked: model[indexPath.row].isCheck)
+                myCollectionView?.reloadData()
+                model[indexPath.row].isCheck = false
+            }
+            else {
+                myCollectionView?.reloadData()
+                myCell.toggleCurtain(isChecked: model[indexPath.row].isCheck)
+                model[indexPath.row].isCheck = true
+            }
+            
+            chosenText = "Text"
+            
+            }
+        }
+    }
 }
+
 
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
-        let myCell = cell as! SiteCell
+        let routeController = storyboard?.instantiateViewController(withIdentifier: "RouteController") as! RouteController
         
-        if model[indexPath.row].isCheck {
-            myCell.toggleCurtain(isChecked: model[indexPath.row].isCheck)
-            myCollectionView?.reloadData()
-            model[indexPath.row].isCheck = false
-        }
-        else {
-            myCollectionView?.reloadData()
-            myCell.toggleCurtain(isChecked: model[indexPath.row].isCheck)
-            model[indexPath.row].isCheck = true
-        }
+        routeController.destinationCoordinate = model[indexPath.row].coordinate
         
-        chosenText = "Text"
+        navigationController?.pushViewController(routeController, animated: true)
+        
     }
-    
-//    func checkCell(cell: UICollectionViewCell) {
-//        maskView.removeFromSuperview()
-//        maskView.frame = cell.contentView.frame
-//        cell.addSubview(maskView)
-//        let checkmarkImageView = UIImageView(frame: CGRect(x: maskView.bounds.width - 20, y: 0, width: 20, height: 20))
-//        checkmarkImageView.image = UIImage(systemName: "checkmark")
-//        maskView.addSubview(checkmarkImageView)
-//    }
 }
 
 extension ViewController: UICollectionViewDataSource {
@@ -151,6 +176,7 @@ extension ViewController: UICollectionViewDataSource {
         cell.siteLabel.text = model[indexPath.row].name
         cell.imageView.image = model[indexPath.row].image
         
+        navigationController?.navigationBar.topItem!.title = model[indexPath.row].country
         if cityLabel.text != model[indexPath.row].city {
             cityLabel.text = model[indexPath.row].city
         }
@@ -173,7 +199,6 @@ extension ViewController: UICollectionViewDataSource {
             cell.layer.shadowRadius = 0
             cell.layer.shadowOpacity = 0
             cell.layer.masksToBounds = false
-//            cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: cell.contentView.layer.cornerRadius).cgPath
         }
         
         cell.contentView.layer.masksToBounds = true

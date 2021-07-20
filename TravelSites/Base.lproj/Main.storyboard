@@ -57,6 +57,35 @@
             </objects>
             <point key="canvasLocation" x="131.8840579710145" y="138.61607142857142"/>
         </scene>
+        <!--Route Controller-->
+        <scene sceneID="CWc-EO-58D">
+            <objects>
+                <viewController storyboardIdentifier="RouteController" id="94y-ra-vlu" customClass="RouteController" customModule="TravelSites" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ffm-bg-Zxd">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="NVv-S9-WLe">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="NVv-S9-WLe" firstAttribute="top" secondItem="8b9-Ft-wjc" secondAttribute="top" id="7UK-hr-U4X"/>
+                            <constraint firstItem="NVv-S9-WLe" firstAttribute="leading" secondItem="8b9-Ft-wjc" secondAttribute="leading" id="eZL-VB-Ict"/>
+                            <constraint firstItem="8b9-Ft-wjc" firstAttribute="bottom" secondItem="NVv-S9-WLe" secondAttribute="bottom" id="kSj-xt-HRQ"/>
+                            <constraint firstItem="8b9-Ft-wjc" firstAttribute="trailing" secondItem="NVv-S9-WLe" secondAttribute="trailing" id="rPX-o8-f7P"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="8b9-Ft-wjc"/>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="NVv-S9-WLe" id="ptN-2c-vQa"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kKd-Na-Scu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="132" y="784"/>
+        </scene>
     </scenes>
     <resources>
         <image name="arrow.left" catalog="system" width="128" height="98"/>
