@@ -10,11 +10,13 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    private var doubleTapGesture: UITapGestureRecognizer!
     private var longTapGesture: UILongPressGestureRecognizer!
 
     var cityLabel = UILabel()
     var chosenSitesLabel: UILabel = UILabel()
+    
+    var myButtons = [UIButton]()
+
     
     var chosenText: String = "" {
         willSet {
@@ -88,12 +90,47 @@ class ViewController: UIViewController {
         chosenSitesLabel.textAlignment = .right
         blueView.addSubview(chosenSitesLabel)
         
+        frame = CGRect(x: 10, y: blueView.bounds.height * 0.65, width: blueView.bounds.width / 3 - 3, height: blueView.bounds.height * 0.1)
+        
+        
+        frame.size.width = view.bounds.width / 3 - 10
+        let popularsButton = UIButton(frame: frame)
+        popularsButton.setTitle("Populars", for: .normal)
+        popularsButton.backgroundColor = .green
+        popularsButton.layer.cornerRadius = 15
+        popularsButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        myButtons.append(popularsButton)
+        blueView.addSubview(popularsButton)
+        
+        frame.origin.x = view.bounds.width / 3
+        let nearYouButton = UIButton(frame: frame)
+        nearYouButton.setTitle("Near You", for: .normal)
+        nearYouButton.layer.cornerRadius = 15
+        nearYouButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        myButtons.append(nearYouButton)
+        blueView.addSubview(nearYouButton)
+        
+        frame.origin.x = view.bounds.width / 3 * 2
+        let favoritesButton = UIButton(frame: frame)
+        favoritesButton.layer.cornerRadius = 15
+        favoritesButton.setTitle("Favourites", for: .normal)
+        favoritesButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        myButtons.append(favoritesButton)
+        blueView.addSubview(favoritesButton)
+        
         frame = CGRect(x: 0, y: view.bounds.height * 0.4, width: view.bounds.width, height: view.bounds.height * 0.6)
         let greenView = UIView(frame: frame)
         greenView.backgroundColor = .green
         
         view.addSubview(greenView)
         
+    }
+    
+    @objc func buttonPressed(_ button: UIButton) {
+        for index in 0...myButtons.count - 1 {
+            myButtons[index].backgroundColor = .blue
+        }
+        button.backgroundColor = .green
     }
     
     func addCollectionView() {

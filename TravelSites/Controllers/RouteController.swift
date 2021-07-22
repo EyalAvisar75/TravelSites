@@ -12,11 +12,18 @@ import MapKit
 
 class RouteController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
+    //MARK:- Properties
     var destinationCoordinate: CLLocationCoordinate2D? = nil
-
-    @IBOutlet weak var mapView: MKMapView!
     let locationManager = CLLocationManager()
-
+    var currentLocation = CLLocationCoordinate2D()
+    var overlay: MKOverlay?
+    var annotations = [MKAnnotation]()
+    var transportationPad = [UIButton]()
+    
+    //MARK:- IBOutlets
+    @IBOutlet weak var mapView: MKMapView!
+    
+    //MARK:- Class methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -33,60 +40,160 @@ class RouteController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         }
     }
     
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        let renderer = MKPolylineRenderer(overlay: overlay)
-        renderer.strokeColor = UIColor.blue
-        renderer.lineWidth = 4.0
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        var frame = CGRect(x: 10, y: 0.9 * view.bounds.height, width: view.bounds.width / 5, height: view.bounds.height / 10)
+        let pedestrianButton = UIButton(frame: frame)
+        pedestrianButton.backgroundColor = .red
+        pedestrianButton.setTitle("Pedestrian", for: .normal)
+        view.addSubview(pedestrianButton)
+        transportationPad.append(pedestrianButton)
+        
+        frame.origin.x = 0.25 * view.bounds.width + 10
+        let carButton = UIButton(frame: frame)
+        carButton.backgroundColor = .red
+        carButton.setTitle("Car", for: .normal)
+        view.addSubview(carButton)
+        transportationPad.append(carButton)
+        
+        frame.origin.x = 0.5 * view.bounds.width + 10
+        let publicButton = UIButton(frame: frame)
+        publicButton.backgroundColor = .red
+        publicButton.setTitle("Public", for: .normal)
+        view.addSubview(publicButton)
+        transportationPad.append(publicButton)
+        
+        frame.origin.x = 0.75 * view.bounds.width + 10
+        let flightButton = UIButton(frame: frame)
+        flightButton.backgroundColor = .red
+        flightButton.setTitle("Flight", for: .normal)
+        view.addSubview(flightButton)
+        transportationPad.append(flightButton)
 
-        return renderer
+        for button in transportationPad {
+            button.addTarget(self, action: #selector(transportationButtonPressed), for: .touchUpInside)
+        }
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @objc func transportationButtonPressed(button: UIButton) {
+        mapView.removeOverlay(overlay!)
+        
+        while !annotations.isEmpty {
+            let annotation = annotations.popLast()!
+            mapView.removeAnnotation(annotation)
+        }
+
+        switch button.title(for: .normal)! {
+        case "Pedestrian":
+            renderRouteFromSource(sourceLocation: currentLocation, transportation: .walking)
+        case "Car":
+        renderRouteFromSource(sourceLocation: currentLocation, transportation: .automobile)
+        case "Public":
+        renderRouteFromSource(sourceLocation: currentLocation, transportation: .transit)
+        case "Flight":
+            renderRouteFromSource(sourceLocation: currentLocation, transportation: .any)
+        default:
+            print("Else")
+        }
+    }
+    
+    //MARK:- LocationManager methods
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         if let location = locations.first {
             manager.stopUpdatingLocation()
+            currentLocation = location.coordinate
             
-            renderRouteFromSource(sourceLocation: location.coordinate)
+            renderRouteFromSource(sourceLocation: location.coordinate, transportation: .automobile )
         }
     }
     
-    func renderRouteFromSource(sourceLocation: CLLocationCoordinate2D) {
+    //MARK:- Map methods
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        let view = MyAnnotationView()
+    
+        print("read", annotation.title!!)
+        if annotation.title!! == "destination" {
+            view.isBlue = true
+        }
+        
+        
+        return view
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        
+        if let overlay = overlay as? MKPolyline {
+                /// define a list of colors you want in your gradient
+                let gradientColors = [UIColor.green, UIColor.blue]
+
+                /// Initialise a GradientPathRenderer with the colors
+                let polylineRenderer = GradientPathRenderer(polyline: overlay, colors: gradientColors)
+
+                /// set a linewidth
+                polylineRenderer.lineWidth = 7
+                return polylineRenderer
+        }
+        
+        return MKOverlayRenderer()
+    }
+    
+    func renderRouteFromSource(sourceLocation: CLLocationCoordinate2D, transportation: MKDirectionsTransportType) {
         
         let sourcePlacemark = MKPlacemark(coordinate: sourceLocation, addressDictionary: nil)
         let destinationPlacemark = MKPlacemark(coordinate: destinationCoordinate!, addressDictionary: nil)
 
-        // 4.
-        let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
-        let destinationMapItem = MKMapItem(placemark: destinationPlacemark)
+        addAnottationsForPlacemark(source: sourcePlacemark, destination: destinationPlacemark)
+        
+        addRouteForPlacemarks(source: sourcePlacemark, destination: destinationPlacemark, transportation: transportation )
+        
+    }
+    
+    func addAnottationsForPlacemark(source: MKPlacemark, destination: MKPlacemark) {
 
         // 5.
         let sourceAnnotation = MKPointAnnotation()
+//        let sourceAnnotation = MyAnnotation()
+        annotations.append(sourceAnnotation)
         sourceAnnotation.title = "current location"
+//        sourceAnnotation.annotationName = "source"
 
-        if let location = sourcePlacemark.location {
+        if let location = source.location {
             sourceAnnotation.coordinate = location.coordinate
         }
 
 
+//        let destinationAnnotation = MyAnnotation()
         let destinationAnnotation = MKPointAnnotation()
+        annotations.append(destinationAnnotation)
         destinationAnnotation.title = "destination"
+        
 
-        if let location = destinationPlacemark.location {
+        if let location = destination.location {
             destinationAnnotation.coordinate = location.coordinate
         }
 
         // 6.
         self.mapView.showAnnotations([sourceAnnotation,destinationAnnotation], animated: true )
-
-        // 7.
+    }
+    
+    func addRouteForPlacemarks(source: MKPlacemark, destination: MKPlacemark, transportation: MKDirectionsTransportType) {
+        
+        let sourceMapItem = MKMapItem(placemark: source)
+        let destinationMapItem = MKMapItem(placemark: destination)
+        
         let directionRequest = MKDirections.Request()
         directionRequest.source = sourceMapItem
         directionRequest.destination = destinationMapItem
-        directionRequest.transportType = .walking
+        directionRequest.transportType = transportation
 
         // Calculate the direction
         let directions = MKDirections(request: directionRequest)
@@ -104,11 +211,13 @@ class RouteController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
             }
 
             let route = response.routes[0]
-            self.mapView.addOverlay((route.polyline), level: MKOverlayLevel.aboveRoads)
-
+            
+            self.overlay = route.polyline
+            self.mapView.addOverlay(self.overlay!, level: MKOverlayLevel.aboveRoads)
             let rect = route.polyline.boundingMapRect
+            
+            
             self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
         }
-
     }
 }
