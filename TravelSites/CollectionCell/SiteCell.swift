@@ -57,7 +57,7 @@ class SiteCell: UICollectionViewCell {
             curtain.frame = contentView.frame
             contentView.addSubview(curtain)
             checkmarkImageView = UIImageView(frame: CGRect(x: curtain.bounds.width - 20, y: 0, width: 20, height: 20))
-            checkmarkImageView.image = UIImage(systemName: "checkmark")
+            checkmarkImageView.image = UIImage(systemName: "checkmark.circle")
             curtain.addSubview(checkmarkImageView)
         }
     }

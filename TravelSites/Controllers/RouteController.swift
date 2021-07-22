@@ -47,6 +47,9 @@ class RouteController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         let pedestrianButton = UIButton(frame: frame)
         pedestrianButton.backgroundColor = .red
         pedestrianButton.setTitle("Pedestrian", for: .normal)
+        pedestrianButton.imageView?.contentMode = .scaleToFill
+        pedestrianButton.setImage(UIImage(named: "pedestrian"), for: .normal)
+
         view.addSubview(pedestrianButton)
         transportationPad.append(pedestrianButton)
         
@@ -54,6 +57,8 @@ class RouteController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         let carButton = UIButton(frame: frame)
         carButton.backgroundColor = .red
         carButton.setTitle("Car", for: .normal)
+        carButton.imageView?.contentMode = .scaleToFill
+        carButton.setImage(UIImage(named: "car"), for: .normal)
         view.addSubview(carButton)
         transportationPad.append(carButton)
         
@@ -61,6 +66,8 @@ class RouteController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         let publicButton = UIButton(frame: frame)
         publicButton.backgroundColor = .red
         publicButton.setTitle("Public", for: .normal)
+        publicButton.imageView?.contentMode = .scaleToFill
+        publicButton.setImage(UIImage(named: "bus"), for: .normal)
         view.addSubview(publicButton)
         transportationPad.append(publicButton)
         
@@ -68,6 +75,8 @@ class RouteController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         let flightButton = UIButton(frame: frame)
         flightButton.backgroundColor = .red
         flightButton.setTitle("Flight", for: .normal)
+        flightButton.imageView?.contentMode = .scaleToFill
+        flightButton.setImage(UIImage(named: "heli"), for: .normal)
         view.addSubview(flightButton)
         transportationPad.append(flightButton)
 

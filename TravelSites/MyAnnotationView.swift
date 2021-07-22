@@ -13,7 +13,7 @@ class MyAnnotationView: MKAnnotationView {
     var isBlue: Bool = false {
         didSet {
             if isBlue {
-                self.frame = CGRect(x: 0, y: 30, width: 50, height: 50)
+                self.frame = CGRect(x: 0, y: 25, width: 50, height: 50)
                 view.frame = frame
                 view.backgroundColor = .blue
                 view.alpha = 0.5
@@ -24,6 +24,12 @@ class MyAnnotationView: MKAnnotationView {
                 myView.backgroundColor = .blue
                 myView.layer.cornerRadius = myView.bounds.width / 2
                 self.addSubview(myView)
+                
+                let innerView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+                innerView.center = view.center
+                innerView.backgroundColor = .white
+                innerView.layer.cornerRadius = innerView.bounds.width / 2
+                self.addSubview(innerView)
             }
         }
     }
