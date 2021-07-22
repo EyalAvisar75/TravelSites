@@ -147,8 +147,6 @@ class ViewController: UIViewController {
     }
     
     func setUpLongTap() {
-//        doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(didDoubleTapCollectionView))
-        
         longTapGesture = UILongPressGestureRecognizer(target: self, action: #selector(didLongTapCollectionView))
         myCollectionView?.addGestureRecognizer(longTapGesture)
         
@@ -223,8 +221,8 @@ extension ViewController: UICollectionViewDataSource {
     
     func setCellVisuals(cell: UICollectionViewCell, isChecked: Bool) {
         if !isChecked {
-            cell.layer.shadowColor = UIColor.lightGray.cgColor
-            cell.layer.shadowOffset = CGSize(width: 0, height: 2.0)
+            cell.layer.shadowColor = UIColor.gray.cgColor
+            cell.layer.shadowOffset = CGSize(width: 0, height: 5)
             cell.layer.shadowRadius = 5.0
             cell.layer.shadowOpacity = 1.0
             cell.layer.masksToBounds = false

@@ -47,6 +47,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1804994F26A9AB5D004B6746 /* HelperFiles */ = {
+			isa = PBXGroup;
+			children = (
+				1804994D26A978CE004B6746 /* MyAnnotationView.swift */,
+				1804994B26A96D66004B6746 /* GradientPathRenderer.swift */,
+			);
+			path = HelperFiles;
+			sourceTree = "<group>";
+		};
 		184ED46926A0226300733579 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -76,8 +85,7 @@
 			children = (
 				1856E05E269D9CFD0016A448 /* AppDelegate.swift */,
 				1856E060269D9CFD0016A448 /* SceneDelegate.swift */,
-				1804994B26A96D66004B6746 /* GradientPathRenderer.swift */,
-				1804994D26A978CE004B6746 /* MyAnnotationView.swift */,
+				1804994F26A9AB5D004B6746 /* HelperFiles */,
 				184ED46926A0226300733579 /* Models */,
 				1856E076269DD16D0016A448 /* CollectionCell */,
 				1856E072269DAA170016A448 /* Controllers */,

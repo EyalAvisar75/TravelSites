@@ -102,13 +102,14 @@ class RouteController: UIViewController, MKMapViewDelegate, CLLocationManagerDel
         case "Pedestrian":
             renderRouteFromSource(sourceLocation: currentLocation, transportation: .walking)
         case "Car":
-        renderRouteFromSource(sourceLocation: currentLocation, transportation: .automobile)
+            renderRouteFromSource(sourceLocation: currentLocation, transportation: .automobile)
         case "Public":
-        renderRouteFromSource(sourceLocation: currentLocation, transportation: .transit)
+            renderRouteFromSource(sourceLocation: currentLocation, transportation: .transit)
+            print("This type is only supported for estimating time of arrival.")
         case "Flight":
             renderRouteFromSource(sourceLocation: currentLocation, transportation: .any)
         default:
-            print("Else")
+            fatalError("Add a suitable case")
         }
     }
     
