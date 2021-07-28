@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 import CoreLocation
 
+private var sites = [
+    Site(isCheck: false, country: "Israel", city:"Tel Aviv", name: "Azrieli", image: UIImage(named: "azrieli"), coordinate: CLLocationCoordinate2D(latitude: 32.071259715 , longitude: 34.7885785123)),
+    Site(isCheck: false, country: "Israel", city:"Tel Aviv", name: "Fountain", image: UIImage(named: "tlvfountain"), coordinate: CLLocationCoordinate2D(latitude: 32.073499706, longitude: 34.771163582)),
+]
+
 struct SiteModel {
-    private var sites = [
-        Site(isCheck: false, country: "Israel", city:"Tel Aviv", name: "Azrieli", image: UIImage(named: "azrieli"), coordinate: CLLocationCoordinate2D(latitude: 32.071259715 , longitude: 34.7885785123)),
-        Site(isCheck: false, country: "Israel", city:"Tel Aviv", name: "Fountain", image: UIImage(named: "tlvfountain"), coordinate: CLLocationCoordinate2D(latitude: 32.073499706, longitude: 34.771163582)),
-    ]
-    
     func getSiteModel() -> [Site] {
         return sites
     }
